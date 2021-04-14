@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
@@ -7,9 +7,12 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import CreateView, ListView, DetailView
-from django.views.generic.list import MultipleObjectMixin
 
-from .models import Post
+from django.core.paginator import Paginator
+
+from .models import Post, Comment
+
+from .forms import CommentForm
 
 
 def index(request):
@@ -65,8 +68,50 @@ class RegistrationForm(CreateView):
         return redirect(self.success_url)
 
 
-class PostDetailView(DetailView):
-    model = Post
+# class PostDetailView(DetailView):
+#     model = Post
+#     paginate_by = 2
+#
+#     def get_context_data(self, **kwargs):
+#         object_list = Comment.objects.filter(post=self.get_object())
+#         context = super(PostDetailView, self).get_context_data(object_list=object_list, **kwargs)
+#         return context
+
+
+def PostDetailView(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    comments = post.comment_set.filter(active=True, parent__isnull=True)
+    paginator = Paginator(comments, 2)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            parent_obj = None
+            try:
+                parent_id = int(request.POST.get('parent_id'))
+            except:
+                parent_id = None
+            if parent_id:
+                parent_obj = Comment.objects.get(id=parent_id)
+                if parent_obj:
+                    replay_comment = comment_form.save(commit=False)
+                    replay_comment.parent = parent_obj
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = post
+            user = request.user
+            new_comment.author = user
+            new_comment.save()
+
+            return redirect('Blog:post-list')
+    else:
+        comment_form = CommentForm()
+    return render(request,
+                  'Blog/post_detail.html',
+                  {'post': post,
+                   'comments': comments,
+                   'comment_form': comment_form,
+                   'page_obj': page_obj })
 
 
 class PostListView(ListView):
