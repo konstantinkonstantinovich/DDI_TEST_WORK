@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
@@ -6,7 +7,9 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic.list import MultipleObjectMixin
 
+from .models import Post
 
 
 def index(request):
@@ -61,3 +64,42 @@ class RegistrationForm(CreateView):
         messages.add_message(self.request, messages.SUCCESS, 'Registration success!')
         return redirect(self.success_url)
 
+
+class PostDetailView(DetailView):
+    model = Post
+
+
+class PostListView(ListView):
+    model = Post
+    paginate_by = 10
+
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    success_url = '/Blog/'
+    fields = ['title', 'content', 'image', 'description']
+
+    def form_valid(self, form):
+        user = self.request.user
+        title = form.cleaned_data['title']
+        content = form.cleaned_data['content']
+        description = form.cleaned_data['description']
+        image = form.cleaned_data['image']
+        Post.objects.create(author=user,
+                            title=title,
+                            content=content,
+                            description=description,
+                            image=image,
+        )
+        messages.add_message(self.request, messages.SUCCESS, 'Post created!')
+        return redirect(self.success_url)
+
+
+class SearchResultView(ListView):
+    model = Post
+    template_name = 'Blog/search_results.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        object_list = Post.objects.filter(title__contains=query)
+        return object_list

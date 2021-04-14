@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<h1 style="text-align: center; margin-bottom: 40px;"> Post list </h1>
+    {% for object in object_list %}
+<div class="container">
+  <div class="well">
+      <div class="media">
+      	<a class="pull-left" href="#">
+            <a href="{% url 'Blog:post-detail' object.pk %}"><img class="media-object" style="margin-right: 10px;" src="{{ object.image.url }}" width="150px" style="max-height:300px"></a>
+  		</a>
+  		<div class="media-body">
+    		<h4 class="media-heading">{{ object.title }}</h4>
+          <p class="text-right">By {{ object.author }}</p>
+          <p>{{ object.description }}</p>
+          <ul class="list-inline list-unstyled">
+  			<li><span><i class="glyphicon glyphicon-calendar"></i> {{ object.publishing_date|date:"D d M Y" }} </span></li>
+            <li>|</li>
+            <span><i class="glyphicon glyphicon-comment"></i> 2 comments</span>
+
+            <li>
+            <!-- Use Font Awesome http://fortawesome.github.io/Font-Awesome/ -->
+              <span><i class="fa fa-facebook-square"></i></span>
+              <span><i class="fa fa-twitter-square"></i></span>
+              <span><i class="fa fa-google-plus-square"></i></span>
+            </li>
+			</ul>
+       </div>
+    </div>
+  </div>
+        </div>
+      {% empty %}
+      <p>No post yet.</p>
+    {% endfor %}
+    {% load bootstrap4 %}
+    <div style="margin-left: 45%" class="text-center">
+  {% bootstrap_pagination page_obj %}
+      </div>
+
+
+
+{% endblock %}

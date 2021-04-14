@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+	.require {
+    color: #666;
+}
+label small {
+    color: #999;
+    font-weight: normal;
+}
+</style>
+<div class="container">
+	<div class="row">
+
+	    <div class="col-md-8 col-md-offset-2">
+
+    		<h1>Create post</h1>
+
+    		<form method="post">
+				{% csrf_token %}
+				{{ form.as_p }}
+
+    		    <div class="form-group">
+    		        <button class="btn btn-lg">
+    		            Create
+    		        </button>
+    		        <button class="btn btn-default">
+    		            Cancel
+    		        </button>
+    		    </div>
+
+    		</form>
+		</div>
+
+	</div>
+</div>
+
+
+{% endblock %}
