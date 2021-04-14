@@ -14,9 +14,8 @@
             integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf"
             crossorigin="anonymous"></script>
 {% load static %}
-    {% block extra_js %}
-    <script src="{% static 'js/contact_ajax.js' %}"></script>
-{% endblock %}
+
+
 
 </head>
 <body>
@@ -49,14 +48,14 @@
             <li><a class="dropdown-item bi bi-person-circle" href="">Profile</a></li>
             <li><a class="dropdown-item " href="#">My post </a></li>
               <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" href="{% url 'Blog:logout' %}">Logout</a></li>
           </ul>
         </li>
       </ul>
         {% else %}
         <ul class="navbar-nav dropdown-menu-dark">
-          <li class="nav-item"><a class="nav-link active" href="#">Registration</a></li>
-          <li class="nav-item"><a class="nav-link active"  href="#">Login</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{% url 'Blog:registration'%}">Registration</a></li>
+          <li class="nav-item"><a class="nav-link active"  href="{% url 'Blog:login'%}">Login</a></li>
         </ul>
       {% endif %}
     </div>

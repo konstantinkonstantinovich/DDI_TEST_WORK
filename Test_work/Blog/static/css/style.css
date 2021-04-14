@@ -1,0 +1,15 @@
+body{
+	background-color: #EFF8FF;
+}
+.main-section{
+	padding:15px;
+	background-color: #fff;
+}
+.list-inline-item{
+	border-right:1px solid black;
+	padding-right:6px;
+	line-height:0.4em;
+}
+.list-inline-item:last-child{
+	border:none;
+}
