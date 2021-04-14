@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Local Connection Home</h1>
+
+  <h2>Dynamic content</h2>
+  You have visited this page {{ num_visits }} time{% if num_visits > 1 %}s{% endif %}.
+{% endblock %}
