@@ -11,6 +11,7 @@ urlpatterns = [
     path('registration/', views.RegistrationForm.as_view(), name='registration'),
     path('post/list/', views.PostListView.as_view(), name="post-list"),
     path('post/create/', views.PostCreateView.as_view(), name="post-create"),
-    path('post/<int:pk>/detail/', views.PostDetailView, name="post-detail"),
+    path('post/<int:pk>/detail/', views.PostDetailView.as_view(), name="post-detail"),
     path('search/', views.SearchResultView.as_view(), name='search_results'),
+    path('post/<int:post_id>/detail/comment/<int:comment_id>/', views.CommentCreateFrom, name="comment-create")
 ]

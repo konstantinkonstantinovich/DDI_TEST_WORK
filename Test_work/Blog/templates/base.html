@@ -14,6 +14,9 @@
             integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf"
             crossorigin="anonymous"></script>
 {% load static %}
+    {% block extra_js %}
+    <script src="{% static 'js/comment_save_form.js' %}"></script>
+{% endblock %}
 
 
 
@@ -81,6 +84,14 @@
 
             <div class="col-sm-10" style="width: 100%; min-width: 100%;" >
                 {% block content %}{% endblock %}
+                {% block modal %}
+                    <div class="modal fade" id="comment-create">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
             </div>
         </div>
     </div>

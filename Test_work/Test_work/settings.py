@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Blog.apps.BlogConfig',
     'crispy_forms',
     'bootstrap4',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

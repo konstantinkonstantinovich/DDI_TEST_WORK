@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/bootstrap.css" rel="stylesheet">
+{% load static %}
 
 <style>
     body {
@@ -79,24 +80,25 @@ footer {
 	}
 
 </style>
+
 <div class="container">
 
         <div class="row">
             <div class="col-lg-8">
 
                 <!-- the actual blog post: title/author/date/content -->
-                <h1><a href="">{{ post.title }}</a></h1>
-                <p class="lead"><i class="fa fa-user"></i> by <a href="">{{ post.author }}</a>
+                <h1><a href="">{{ object.title }}</a></h1>
+                <p class="lead"><i class="fa fa-user"></i> by <a href="">{{ object.author }}</a>
                 </p>
                 <hr>
-                <p><i class="fa fa-calendar"></i> Posted on {{ post.publishing_date|date:"D d M Y" }}</p>
+                <p><i class="fa fa-calendar"></i> Posted on {{ object.publishing_date|date:"D d M Y" }}</p>
 				<p><i class="fa fa-tags"></i> Tags: <a href=""><span class="badge badge-info">Bootstrap</span></a> <a href=""><span class="badge badge-info">Web</span></a> <a href=""><span class="badge badge-info">CSS</span></a> <a href=""><span class="badge badge-info">HTML</span></a></p>
 
                 <hr>
                 <img src="{{ object.image.url }}" class="img-responsive">
                 <hr>
-                <p class="lead">{{ post.description }}</p>
-                <p>{{ post.content }}</p>
+                <p class="lead">{{ object.description }}</p>
+                <p>{{ object.content }}</p>
 
                 <br/>
 				<center>
@@ -112,60 +114,50 @@ footer {
                 <!-- the comment box -->
                 <div class="well">
                     <h4><i class="fa fa-paper-plane-o"></i> Leave a Comment:</h4>
-                    <form role="form" method="post" action=".">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            {{ comment_form.as_p }}
-                        </div>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-reply"></i> Submit</button>
-                    </form>
+                    <a class="js-comment-create" data-url="{% url 'Blog:comment-create' object.pk 0 %}">Add a comment</a>
+<!--                    <form role="form" method="post" action=".">-->
+<!--                        {% csrf_token %}-->
+<!--                        <div class="form-group">-->
+<!--                            {{ comment_form.as_p }}-->
+<!--                        </div>-->
+<!--                        <button type="submit" class="btn btn-primary"><i class="fa fa-reply"></i> Submit</button>-->
+<!--                    </form>-->
                 </div>
 <script src="https://apis.google.com/js/plusone.js">
 </script>
                 <hr>
 
-{% for comment in page_obj %}
-<h3><i class="fa fa-comment"></i> {{ comment.author }}:
-                        <small>{{ comment.pub_date|date:"h:m D d M Y" }}</small>
-                    </h3>
-                    <p>{{ comment.comment }}</p>
-                                        {% for replay in comment.copy.all %}
-                        <h3><i class="fa fa-comment" style="margin-left: 30px;"></i> {{ replay.author }}:
-                            <small >{{ replay.pub_date|date:"h:m D d M Y" }}</small>
-                        </h3>
-                        <p style="margin-left: 30px;">{{ replay.comment }}</p>
-                    {% endfor %}
-                    <h4>Reply</h4>
-                    <form method="post" action=".">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            {{ comment_form.as_p }}
-                        </div>
-                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                        <input class="btn btn-primary" type="submit" value="Replay">
-                    </form>
+{% for object in object_list %}
+    <h3><i class="fa fa-comment"></i> {{ object.author }}:
+        <small>{{ object.pub_date|date:"h:m D d M Y" }}</small>
+    </h3>
+    <p>{{ object.comment }}                          <a class="js-comment-create" data-url="{% url 'Blog:comment-create' object.post.id object.pk %}"><i class="fa fa-reply"></i> Replay</a></p>
 
-                {% empty %}
-                    <p>No comment yet.</p>
+<!--                                        {% for replay in comment.copy.all %}-->
+<!--                        <h3><i class="fa fa-comment" style="margin-left: 30px;"></i> {{ replay.author }}:-->
+<!--                            <small >{{ replay.pub_date|date:"h:m D d M Y" }}</small>-->
+<!--                        </h3>-->
+<!--                        <p style="margin-left: 30px;">{{ replay.comment }}</p>-->
+<!--                    {% endfor %}-->
+<!--                    <h4>Reply</h4>-->
+<!--                    <form method="post" action=".">-->
+<!--                        {% csrf_token %}-->
+<!--                        <div class="form-group">-->
+<!--                            {{ comment_form.as_p }}-->
+<!--                        </div>-->
+<!--                        <input type="hidden" name="parent_id" value="{{ comment.id }}">-->
+<!--                        <input class="btn btn-primary" type="submit" value="Replay">-->
+<!--                    </form>-->
+
+{% empty %}
+    <p>No comment yet.</p>
 {% endfor %}
-
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
+ <div class="pagination">
+    {% load bootstrap4 %}
+    {% bootstrap_pagination page_obj %}
 </div>
+
+
             </div>
 
             <div class="col-lg-4">
@@ -261,8 +253,7 @@ footer {
 
         </footer>
     </div>
-    <script src="js/jquery-1.10.2.js"></script>
-    <script src="js/bootstrap.js"></script>
+
 
 
 {% endblock %}

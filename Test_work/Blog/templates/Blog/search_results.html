@@ -10,7 +10,7 @@
   <div class="well">
       <div class="media">
       	<a class="pull-left" href="#">
-            <a href="{% url 'Blog:post-detail' object.pk %}"><img class="media-object" src="{{ object.image.url }}" width="150px" style="max-height:300px"></a>
+            <a href="{% url 'Blog:post-detail' object.pk %}"><img class="media-object" style="margin-right: 20px;" src="{{ object.image.url }}" width="150px" style="max-height:300px"></a>
   		</a>
   		<div class="media-body">
     		<h4 class="media-heading">{{ object.title }}</h4>
