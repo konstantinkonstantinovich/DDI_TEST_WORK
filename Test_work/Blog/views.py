@@ -77,8 +77,11 @@ class PostDetailView(MultipleObjectMixin, DetailView):
      paginate_by = 5
 
      def get_context_data(self, **kwargs):
+         post = self.get_object()
          object_list = Comment.objects.filter(post=self.get_object())
+         comment_list = Comment.objects.filter(parent=post.pk)
          context = super(PostDetailView, self).get_context_data(object_list=object_list, **kwargs)
+         context['obj'] = comment_list
          return context
 
 

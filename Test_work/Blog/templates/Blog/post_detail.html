@@ -131,7 +131,13 @@ footer {
     <h3><i class="fa fa-comment"></i> {{ object.author }}:
         <small>{{ object.pub_date|date:"h:m D d M Y" }}</small>
     </h3>
-    <p>{{ object.comment }}                          <a class="js-comment-create" data-url="{% url 'Blog:comment-create' object.post.id object.pk %}"><i class="fa fa-reply"></i> Replay</a></p>
+    <p>{{ object.comment }} <a class="js-comment-create" data-url="{% url 'Blog:comment-create' object.post.id object.pk %}"><i class="fa fa-reply"></i> Replay</a></p>
+                {% for comment in obj %}
+                    <h3 style="margin-left: 30px;"><i class="fa fa-comment"></i> {{ comment.author }}:
+                        <small>{{ comment.pub_date|date:"h:m D d M Y" }}</small>
+                    </h3>
+                    <p style="margin-left: 30px;">{{ comment.comment }} <a class="js-comment-create" data-url="{% url 'Blog:comment-create' object.post.id object.pk %}"><i class="fa fa-reply"></i> Replay</a></p>
+                {% endfor %}
 
 <!--                                        {% for replay in comment.copy.all %}-->
 <!--                        <h3><i class="fa fa-comment" style="margin-left: 30px;"></i> {{ replay.author }}:-->
